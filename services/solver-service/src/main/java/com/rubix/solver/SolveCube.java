@@ -358,18 +358,16 @@ private List<String> readResource(String filename) throws IOException {
 	}
 
 	//Solution application
-	public String stageSolution(int hash, int hashLength, List<String> stageSolutions){
-		String stageOneSolution = "";
-		try {
-			String turns = stageSolutions.get(hash);
-			stageOneSolution = arrangeString(turns, hashLength);
-
-		} catch (Exception e) {
-			System.out.println("False cube! Color detection failed. Please retry");
-			System.exit(0);
-		}
-		return stageOneSolution;
-	}
+public String stageSolution(int hash, int hashLength, List<String> stageSolutions){
+    String stageOneSolution = "";
+    try {
+        String turns = stageSolutions.get(hash);
+        stageOneSolution = arrangeString(turns, hashLength);
+    } catch (Exception e) {
+        throw new RuntimeException("Invalid cube state — color detection failed. Please retry.");
+    }
+    return stageOneSolution;
+}
 	// NEW METHOD — entry point for REST API
 // Accepts a 6x9 byte array directly, bypasses keyboard input
 public String solveFromByteArray(byte[][] inputCube) throws IOException {
