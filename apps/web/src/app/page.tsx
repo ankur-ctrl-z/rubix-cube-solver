@@ -1,65 +1,93 @@
-import Image from "next/image";
+import Link from 'next/link'
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="min-h-screen bg-grid flex flex-col items-center justify-center relative overflow-hidden"
+          style={{ background: 'var(--bg)' }}>
+
+      {/* Glow orbs */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full"
+           style={{ background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)' }}/>
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 rounded-full"
+           style={{ background: 'radial-gradient(circle, rgba(6,182,212,0.15) 0%, transparent 70%)' }}/>
+
+      {/* Content */}
+      <div className="relative z-10 text-center px-6 animate-slide-up">
+
+        {/* Cube icon */}
+        <div className="flex justify-center mb-8">
+          <div className="grid grid-cols-3 gap-1 w-16 h-16">
+            {['color-3','color-0','color-2',
+              'color-4','color-1','color-3',
+              'color-5','color-2','color-0'].map((c, i) => (
+              <div key={i} className={`${c} rounded-sm`}/>
+            ))}
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <p className="mono text-sm mb-4"
+           style={{ color: 'var(--accent2)', letterSpacing: '0.3em' }}>
+          AI — POWERED
+        </p>
+
+        <h1 className="text-6xl font-extrabold mb-4 leading-none"
+            style={{ fontFamily: 'Syne' }}>
+          RUBIX
+          <span style={{
+            background: 'linear-gradient(135deg, var(--accent), var(--accent2))',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent'
+          }}> SOLVER</span>
+        </h1>
+
+        <p className="text-lg mb-12 max-w-md mx-auto"
+           style={{ color: 'var(--muted)' }}>
+          Scan all 6 faces of your cube with your camera.
+          Get the exact moves to solve it in seconds.
+        </p>
+
+        {/* Stats */}
+        <div className="flex gap-12 justify-center mb-12">
+          {[
+            { value: '≤28', label: 'Max moves' },
+            { value: '6',   label: 'Face scans' },
+            { value: '<3s', label: 'Solve time' },
+          ].map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-3xl font-bold mono"
+                   style={{ color: 'var(--accent)' }}>{stat.value}</div>
+              <div className="text-xs mt-1"
+                   style={{ color: 'var(--muted)' }}>{stat.label}</div>
+            </div>
+          ))}
         </div>
-      </main>
-    </div>
-  );
+
+        {/* CTA buttons */}
+        <div className="flex gap-4 justify-center">
+          <Link href="/scan"
+            className="px-8 py-4 rounded-lg font-bold text-white glow transition-all hover:scale-105"
+            style={{ background: 'linear-gradient(135deg, var(--accent), var(--accent2))' }}>
+            Start Scanning →
+          </Link>
+          <Link href="/history"
+            className="px-8 py-4 rounded-lg font-bold transition-all hover:scale-105"
+            style={{
+              border: '1px solid var(--border)',
+              color: 'var(--muted)',
+              background: 'var(--surface)'
+            }}>
+            View History
+          </Link>
+        </div>
+
+      </div>
+
+      {/* Bottom instruction */}
+      <div className="absolute bottom-8 mono text-xs"
+           style={{ color: 'var(--muted)' }}>
+        HOLD WHITE FACE UP · GREEN FACE TOWARD CAMERA
+      </div>
+
+    </main>
+  )
 }

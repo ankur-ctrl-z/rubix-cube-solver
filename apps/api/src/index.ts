@@ -1,24 +1,31 @@
-import {Hono} from 'hono';
-import {z} from 'zod';
-import {cors} from 'hono/cors';
+import { Hono } from 'hono'
+import { cors } from 'hono/cors'
+import { logger } from 'hono/logger'
+import { scan } from './routes/scan'
+import { solve } from './routes/solve'
+import { history } from './routes/history'
 
-const app = new Hono();
+export type Env = {
+  CV_SERVICE_URL: string
+  SOLVER_SERVICE_URL: string
+  DATABASE_URL: string
+}
 
-app.use('*', cors());
+const app = new Hono<{ Bindings: Env }>()
 
-app.get('/', (c) => 
-	c.json({
-		status : "Rubix Solver API running"
+// Middleware
+app.use('/*', cors())
+app.use('/*', logger())
+
+// Health check
+app.get('/', (c) => c.json({ 
+  status: 'Rubix Solver API running',
+  version: '1.0.0'
 }))
 
-app.post('/scan', async (c) => {
-	const body = await c.req.json()
-	return c.json({recieved: true, face: body.face});
-})
-
-app.post('solve', async (c) => {
-	const body = await c.req.json()
-	return c.json({solution: 'placeholder'})
-})
+// Routes
+app.route('/scan', scan)
+app.route('/solve', solve)
+app.route('/history', history)
 
 export default app
