@@ -87,6 +87,70 @@ async def detect_colors(
         "faces":      faces,
     }
 
+@app.post("/debug")
+async def debug_colors(
+    top:    UploadFile = File(...),
+    left:   UploadFile = File(...),
+    front:  UploadFile = File(...),
+    right:  UploadFile = File(...),
+    back:   UploadFile = File(...),
+    bottom: UploadFile = File(...),
+):
+    uploaded = {
+        "TOP":    await top.read(),
+        "LEFT":   await left.read(),
+        "FRONT":  await front.read(),
+        "RIGHT":  await right.read(),
+        "BACK":   await back.read(),
+        "BOTTOM": await bottom.read(),
+    }
+
+    color_names = {
+        0: "white", 1: "orange", 2: "green",
+        3: "red",   4: "blue",   5: "yellow"
+    }
+
+    faces = {}
+    faces_raw = {}
+
+    for face_name, image_bytes in uploaded.items():
+        img    = preprocess_image(image_bytes)
+        cells  = extract_face_grid(img)
+        colors = detect_face_colors(cells)
+        faces_raw[face_name] = colors
+        faces[face_name] = {
+            "raw": colors,
+            "named": [color_names[c] for c in colors],
+            "counts": {color_names[i]: colors.count(i) for i in range(6)}
+        }
+
+    all_colors = []
+    for face_data in faces.values():
+        all_colors.extend(face_data["raw"])
+
+    total_counts = {color_names[i]: all_colors.count(i) for i in range(6)}
+    cube_string  = build_cube_string(faces_raw)
+
+    # directly call java solver so we can see its response
+    solver_response = None
+    try:
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            response = await client.get(
+                SOLVER_URL,
+                params={"state": cube_string}
+            )
+            solver_response = response.json()
+    except Exception as e:
+        solver_response = {"error": str(e)}
+
+    return {
+        "faces":         faces,
+        "total_counts":  total_counts,
+        "total_stickers": len(all_colors),
+        "valid":         all(v == 9 for v in total_counts.values()),
+        "cube_string":   cube_string,
+        "solver_response": solver_response
+    }
 
 if __name__ == "__main__":
     uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
