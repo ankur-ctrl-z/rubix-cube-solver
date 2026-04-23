@@ -27,7 +27,7 @@ export default function Home() {
         }}
       >
         <Show when="signed-in">
-          <UserButton afterSignOutUrl="/" />
+          <UserButton/>
         </Show>
 
         <Show when="signed-out">
@@ -126,17 +126,23 @@ export default function Home() {
           </div>
         </div>
 
-        <div
-          className="mono"
-          style={{
-            color: 'var(--accent2)',
-            fontSize: '12px',
-            letterSpacing: '0.3em',
-            marginBottom: '16px'
-          }}
-        >
-          AI — POWERED
-        </div>
+<Link
+  href="https://ankurwork.vercel.app/"
+  target="_blank"
+  rel="noopener noreferrer"
+  className="mono"
+  style={{
+    color: 'var(--accent2)',
+    fontSize: '12px',
+    letterSpacing: '0.3em',
+    marginBottom: '16px',
+    display: 'inline-block',
+    textDecoration: 'none',
+    cursor: 'pointer'
+  }}
+>
+  BUILD BY ANKUR SHARMA
+</Link>
 
         <h1
           style={{
