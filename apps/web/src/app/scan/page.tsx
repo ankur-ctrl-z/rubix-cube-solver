@@ -83,7 +83,7 @@ export default function ScanPage() {
         formData.append(face, file)
       })
 
-      const response = await fetch('http://localhost:8787/scan', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/scan`, {
         method: 'POST',
         headers: { 'x-user-id': userId || '' },
         body: formData,
