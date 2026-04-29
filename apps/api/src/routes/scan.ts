@@ -7,8 +7,8 @@ export const scan = new Hono<{ Bindings: Env }>()
 scan.post('/', async (c) => {
   try {
     const formData = await c.req.formData()
-
     const faceNames = ['top', 'left', 'front', 'right', 'back', 'bottom']
+
     for (const face of faceNames) {
       if (!formData.get(face)) {
         return c.json({
@@ -19,7 +19,7 @@ scan.post('/', async (c) => {
     }
 
     const cvServiceUrl = c.env.CV_SERVICE_URL || 'http://127.0.0.1:8000'
-    const cvFormData = new FormData()
+    const cvFormData   = new FormData()
     for (const face of faceNames) {
       const file = formData.get(face) as File
       cvFormData.append(face, file)
@@ -29,7 +29,6 @@ scan.post('/', async (c) => {
       method: 'POST',
       body: cvFormData,
     })
-
     const cvResult = await cvResponse.json() as any
 
     if (!cvResponse.ok) {
@@ -39,21 +38,23 @@ scan.post('/', async (c) => {
       }, 400)
     }
 
-    // Save to Neon database using raw SQL
-    const sql = getDb(c.env.DATABASE_URL)
+    // Get userId from header
+    const userId   = c.req.header('x-user-id') || null
+    const sql      = getDb(c.env.DATABASE_URL)
     const moveCount = parseInt(cvResult.moves) || 0
 
-const saved = await sql`
-  INSERT INTO "Scan" (id, "cubeState", solution, "moveCount", "createdAt")
-  VALUES (
-    gen_random_uuid(),
-    ${cvResult.cube_state},
-    ${cvResult.solution},
-    ${moveCount},
-    NOW()
-  )
-  RETURNING id
-`
+    const saved = await sql`
+      INSERT INTO "Scan" (id, "cubeState", solution, "moveCount", "userId", "createdAt")
+      VALUES (
+        gen_random_uuid(),
+        ${cvResult.cube_state},
+        ${cvResult.solution},
+        ${moveCount},
+        ${userId},
+        NOW()
+      )
+      RETURNING id
+    `
 
     return c.json({
       status:     'ok',
