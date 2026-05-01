@@ -10,7 +10,11 @@ app = FastAPI(title="Rubix CV Service")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://rubix-cube-solver.vercel.app",
+        "https://*.vercel.app"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )

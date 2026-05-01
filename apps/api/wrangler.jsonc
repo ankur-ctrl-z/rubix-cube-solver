@@ -3,8 +3,8 @@
   "main": "src/index.ts",
   "compatibility_date": "2024-01-01",
   "vars": {
-    "CV_SERVICE_URL": "http://127.0.0.1:8000",
-    "SOLVER_SERVICE_URL": "http://127.0.0.1:8080",
+    "CV_SERVICE_URL": "https://cv-service-yf7u.onrender.com",
+    "SOLVER_SERVICE_URL": "https://solver-service-4e76.onrender.com",
     "DATABASE_URL": "postgresql://neondb_owner:npg_8xwz3CXFviSr@ep-icy-night-am917mc9-pooler.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
   },
   "dev": {

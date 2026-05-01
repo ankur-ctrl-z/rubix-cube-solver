@@ -1,0 +1,31 @@
+name: Deploy
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  deploy-workers:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+        working-directory: apps/api
+      - run: npx wrangler deploy
+        working-directory: apps/api
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ cfut_fskrh9sZh1bpTXRMTO0vB4B1EVf5traIf0WqJdoz382874f3 }}
+
+  deploy-vercel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install -g vercel
+      - run: vercel --prod --token=${{ vcp_83cPjSuZup6EqX3XzD2Zc8o4GhUCHbMCsyL8ANmHGH3RGyqg410GBdgM }}
+        working-directory: apps/web

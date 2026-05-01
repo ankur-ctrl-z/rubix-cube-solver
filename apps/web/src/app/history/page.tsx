@@ -20,7 +20,7 @@ export default function HistoryPage() {
 
   useEffect(() => {
     if (!userId) return
-    fetch('http://localhost:8787/history', {
+    fetch(`${process.env.NEXT_PUBLIC_API_URL}/history`, {
       headers: { 'x-user-id': userId }
     })
       .then(r => r.json())
