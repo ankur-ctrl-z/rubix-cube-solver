@@ -4,7 +4,7 @@ import { z } from 'zod'
 import type { Env } from '../index'
 
 export const solve = new Hono<{ Bindings: Env }>()
-
+ 
 const solveSchema = z.object({
   state: z.string()
     .length(54, 'Cube state must be exactly 54 characters')

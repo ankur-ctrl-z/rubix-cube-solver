@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useAuth } from '@clerk/nextjs'
 
 interface Scan {
-  id: string
+  id: string 
   cubeState: string
   solution: string
   moveCount: number

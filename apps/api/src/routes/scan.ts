@@ -38,7 +38,7 @@ scan.post('/', async (c) => {
       }, 400)
     }
 
-    // Get userId from header
+    // Get userId from header 
     const userId   = c.req.header('x-user-id') || null
     const sql      = getDb(c.env.DATABASE_URL)
     const moveCount = parseInt(cvResult.moves) || 0

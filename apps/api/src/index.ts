@@ -17,7 +17,7 @@ const app = new Hono<{ Bindings: Env }>()
 app.use('/*', cors())
 app.use('/*', logger())
 
-// Health check
+// Health check 
 app.get('/', (c) => c.json({ 
   status: 'Rubix Solver API running',
   version: '1.0.0'

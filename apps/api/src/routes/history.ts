@@ -26,7 +26,7 @@ history.get('/', async (c) => {
   } catch (error: any) {
     return c.json({ status: 'error', error: error.message }, 500)
   }
-})
+}) 
 
 history.get('/:id', async (c) => {
   try {
