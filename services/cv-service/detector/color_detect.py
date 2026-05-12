@@ -32,47 +32,50 @@ def detect_cell_color(cell_img: np.ndarray) -> int:
 def classify_color(h: float, s: float, v: float) -> int:
     """
     Classify HSV values into one of 6 cube colors
-    Uses a decision tree approach — order matters here
+    Based on actual measured HSV values:
+    - Red:    H=0-1,   S~247
+    - Orange: H=10-12, S~243
+    - Green:  H=63-68, S~248
+    - Blue:   H=102-104, S~249
+    - Yellow: H=29-32, S~236
+    - White:  H=any,   S<20, V>170
     """
 
-    # WHITE — must check first
-    # White has very low saturation regardless of hue
-    if s < 60 and v > 160:
+    # WHITE — very low saturation
+    if s < 25 and v > 160:
         return 0  # white
 
-    # YELLOW — bright, medium-high saturation, specific hue
-    if 18 <= h <= 48 and s > 80 and v > 120:
-        return 5  # yellow
-
-    # ORANGE — low hue, high saturation
-    if 5 <= h <= 22 and s > 100:
-        return 1  # orange
-
-    # GREEN — mid hue range
-    if 40 <= h <= 90 and s > 80:
-        return 2  # green
-
-    # BLUE — high hue range
-    if 85 <= h <= 140 and s > 60:
-        return 4  # blue
-
-    # RED — wraps around 0/180 in HSV
-    if (h <= 10 or h >= 160) and s > 80:
+    # RED — hue 0-9, very high saturation
+    if (h <= 9 or h >= 165) and s > 200:
         return 3  # red
 
-    # ── FALLBACK ──
-    # If nothing matched, find nearest color by hue distance
-    # but handle white separately first
-    if s < 80:
-        return 0  # low saturation = white
+    # ORANGE — hue 9.5-22, high saturation
+    if 9.5 <= h <= 22 and s > 200:
+        return 1  # orange
 
-    # Find nearest hue
+    # YELLOW — hue 28-35, high saturation
+    if 28 <= h <= 38 and s > 200:
+        return 5  # yellow
+
+    # GREEN — hue 60-70, high saturation
+    if 58 <= h <= 75 and s > 200:
+        return 2  # green
+
+    # BLUE — hue 95-110, high saturation
+    if 95 <= h <= 115 and s > 200:
+        return 4  # blue
+
+    # FALLBACK — low saturation = white
+    if s < 60:
+        return 0
+
+    # Find nearest by hue
     hue_centers = {
-        1: 12,   # orange
+        1: 11,   # orange
         2: 65,   # green
-        3: 0,    # red
-        4: 112,  # blue
-        5: 30,   # yellow
+        3: 1,    # red
+        4: 103,  # blue
+        5: 31,   # yellow
     }
 
     nearest = min(hue_centers, key=lambda c: min(
@@ -80,4 +83,4 @@ def classify_color(h: float, s: float, v: float) -> int:
         abs(hue_centers[c] - h + 180),
         abs(hue_centers[c] - h - 180)
     ))
-    return nearest
+    return nearest 
