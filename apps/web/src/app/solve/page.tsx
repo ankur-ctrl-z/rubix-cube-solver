@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import CubeViewer from '@/components/CubeViewer'
+import SolutionSteps from '@/components/SolutionSteps'
 
 const MOVE_EXPLANATIONS: Record<string, string> = {
   'U':  'Turn TOP face clockwise',
@@ -32,20 +34,22 @@ export default function SolvePage() {
   const [completed, setCompleted]     = useState(false)
   const [cubeState, setCubeState]     = useState('')
   const [totalMoves, setTotalMoves]   = useState(0)
+  const [faces, setFaces] = useState<Record<string, number[]>>({})
 
-  useEffect(() => {
-    const stored = localStorage.getItem('rubix_solution')
-    if (!stored) { router.push('/scan'); return }
+useEffect(() => {
+  const stored = localStorage.getItem('rubix_solution')
+  if (!stored) { router.push('/scan'); return }
 
-    const result = JSON.parse(stored)
-    const moves  = result.solution
-      ? result.solution.trim().split(/\s+/).filter(Boolean)
-      : []
+  const result = JSON.parse(stored)
+  const moves  = result.solution
+    ? result.solution.trim().split(/\s+/).filter(Boolean)
+    : []
 
-    setSolution(moves)
-    setTotalMoves(moves.length)
-    setCubeState(result.cube_state || '')
-  }, [router])
+  setSolution(moves)
+  setTotalMoves(moves.length)
+  setCubeState(result.cube_state || '')
+  setFaces(result.faces || {})  // ← add this line
+}, [router])
 
   const next = () => {
     if (currentStep < solution.length - 1) {
@@ -140,7 +144,7 @@ export default function SolvePage() {
       </div>
 
       <div className="max-w-lg mx-auto px-6 py-8">
-
+        <CubeViewer faces={faces} />
         {/* Current move */}
         <div
           className="rounded-2xl p-8 text-center mb-6 glow"
