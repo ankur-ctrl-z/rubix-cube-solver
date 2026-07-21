@@ -2,7 +2,7 @@
   "name": "rubix-cube-solver",
   "private": true,
   "workspaces": [
-    "apps/*",
+    "apps/*", 
     "packages/*"
   ],
   "scripts": {
