@@ -5,7 +5,7 @@ def validate_cube_state(faces: dict) -> bool:
 
     if len(all_colors) != 54:
         return False
-
+ 
     for color in range(6):
         if all_colors.count(color) != 9:
             return False
