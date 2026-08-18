@@ -5,7 +5,7 @@ import { scan } from './routes/scan'
 import { solve } from './routes/solve'
 import { history } from './routes/history'
 
-export type Env = {
+export type Env = { 
   CV_SERVICE_URL: string
   SOLVER_SERVICE_URL: string
   DATABASE_URL: string
